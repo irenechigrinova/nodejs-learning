@@ -1,10 +1,10 @@
 import csv from 'csvtojson';
 import fs from 'fs';
 
-const rs = fs.createReadStream('./module1/csv/Book1.csv');
-const ws = fs.createWriteStream('./module1/results/task2.txt');
+const rs = fs.createReadStream('./src/module1/csv/Book1.csv');
+const ws = fs.createWriteStream('./src/module1/results/task2.txt');
 
-const handleError = e => console.error(e);
+const handleError = (e: Error) => console.error(e);
 
 const handleComplete = () => console.log("Complete");
 
@@ -27,9 +27,9 @@ csv()
                 ws.write(`${JSON.stringify(formatted)}\n`);
                 resolve();
             } catch (e) {
+                handleError(e as Error);
                 reject(e);
             }
         });
     })
     .then(() => handleComplete())
-    .catch(e => handleError(e))

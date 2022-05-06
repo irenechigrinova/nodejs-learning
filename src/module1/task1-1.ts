@@ -1,5 +1,5 @@
 import process from 'process';
 
 process.stdin.on('data', data => {
-    console.log(data.toString().split('').reverse().join(''));
+    process.stdout.write(data.toString().split('').reverse().join(''));
 })

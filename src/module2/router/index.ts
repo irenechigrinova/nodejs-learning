@@ -9,8 +9,8 @@ module.exports = (db: IDataBase<TUser>) => {
   const userController = new UserController(db);
 
   appRouter.get('/users/', userController.getUsers);
+  appRouter.get('/users/autoSuggestions/', userController.getAutoSuggestUsers);
   appRouter.get('/users/:id', userController.getUserById);
-  appRouter.get('/autoSuggestions/', userController.getAutoSuggestUsers);
   appRouter.post('/users/', userController.createUser);
   appRouter.put('/users/', userController.updateUser);
   appRouter.delete('/users/:id', userController.softDeleteUser);

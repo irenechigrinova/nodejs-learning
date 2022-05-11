@@ -8,6 +8,8 @@ const DB = require('./controllers/db-controller');
 const PORT = process.env.PORT || 8000;
 
 const app = express();
+app.disable('x-powered-by');
+
 const dbInstance = new DB();
 const appRouter = router(dbInstance);
 

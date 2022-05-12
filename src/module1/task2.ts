@@ -1,6 +1,6 @@
 import fs from 'fs';
 import csv from 'csvtojson';
-import { Transform, TransformCallback } from 'stream';
+import { Transform, TransformCallback, pipeline } from 'stream';
 
 const rs = fs.createReadStream('./src/module1/csv/Book1.csv');
 const ws = fs.createWriteStream('./src/module1/results/task2.txt');
@@ -57,11 +57,9 @@ class CustomTransform extends Transform {
   }
 }
 
-const transform = new CustomTransform();
-
 rs.pipe(csv())
   .on('error', (e) => console.error('Read file error: ', e))
-  .pipe(transform)
+  .pipe(new CustomTransform())
   .on('error', (e) => console.error('Transform error: ', e))
   .pipe(ws)
   .on('error', (e) => {
@@ -72,3 +70,18 @@ rs.pipe(csv())
     console.log('Write file succeeded');
     process.exit();
   });
+
+/* pipeline(
+  csv().fromFile('./src/module1/csv/Book1.csv'),
+  transform,
+  ws,
+  (err) => {
+    if (err) {
+      console.error('Pipeline failed.', err);
+    } else {
+      console.log('Pipeline succeeded.');
+    }
+  }
+);
+console.log('Write file succeeded');
+process.exit(); */

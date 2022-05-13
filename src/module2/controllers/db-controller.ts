@@ -1,49 +1,26 @@
-const uuid = require('uuid');
+const DBService = require('../services/db-service');
 
 class DBController<T extends { id: string }> {
   private list: T[] = [];
 
   find(params: Record<keyof T, any>) {
-    return new Promise((resolve) => {
-      resolve(
-        this.list.filter((item) =>
-          Object.keys(params).every(
-            (key) =>
-              (item as Record<keyof T, any>)[key as keyof T] ===
-              params[key as keyof T]
-          )
-        )
-      );
-    });
+    return DBService.find(params, this.list);
   }
 
-  create(item: T) {
-    return new Promise((resolve) => {
-      const newItem: T = {
-        ...item,
-        id: uuid.v4() as string,
-      };
-      this.list.push(newItem);
-      resolve(newItem);
-    });
+  async create(item: T) {
+    const { newItem, list } = await DBService.create(item, this.list);
+    this.list = list;
+    return newItem;
   }
 
-  findByIdAndDelete(id: string) {
-    return new Promise((resolve) => {
-      this.list = this.list.map((item) =>
-        item.id === id ? { ...item, isDeleted: true } : item
-      );
-      resolve(null);
-    });
+  async findByIdAndDelete(id: string) {
+    this.list = await DBService.findByIdAndDelete(id, this.list);
+    return null;
   }
 
-  findByIdAndUpdate(id: string, updatedItem: T) {
-    return new Promise((resolve) => {
-      this.list = this.list.map((item) =>
-        item.id === id ? updatedItem : item
-      );
-      resolve(updatedItem);
-    });
+  async findByIdAndUpdate(id: string, updatedItem: T) {
+    this.list = await DBService.findByIdAndUpdate(id, updatedItem, this.list);
+    return updatedItem;
   }
 }
 

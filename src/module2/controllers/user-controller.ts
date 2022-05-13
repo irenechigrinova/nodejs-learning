@@ -82,7 +82,7 @@ class UserController {
   async softDeleteUser(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      this.service.softDeleteUser(id);
+      await this.service.softDeleteUser(id);
       res.json({ success: true });
     } catch (e) {
       next(e);

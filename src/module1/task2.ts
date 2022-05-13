@@ -57,7 +57,7 @@ class CustomTransform extends Transform {
   }
 }
 
-rs.pipe(csv())
+/* rs.pipe(csv())
   .on('error', (e) => console.error('Read file error: ', e))
   .pipe(new CustomTransform())
   .on('error', (e) => console.error('Transform error: ', e))
@@ -69,19 +69,13 @@ rs.pipe(csv())
   .on('finish', () => {
     console.log('Write file succeeded');
     process.exit();
-  });
+  }); */
 
-/* pipeline(
-  csv().fromFile('./src/module1/csv/Book1.csv'),
-  transform,
-  ws,
-  (err) => {
-    if (err) {
-      console.error('Pipeline failed.', err);
-    } else {
-      console.log('Pipeline succeeded.');
-    }
+const transform = new CustomTransform();
+pipeline(csv().fromStream(rs), transform, ws, (err) => {
+  if (err) {
+    console.error('Pipeline failed.', err);
+  } else {
+    console.log('Pipeline succeeded.');
   }
-);
-console.log('Write file succeeded');
-process.exit(); */
+});

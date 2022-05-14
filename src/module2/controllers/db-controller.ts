@@ -22,6 +22,10 @@ class DBController<T extends { id: string }> {
     this.list = await DBService.findByIdAndUpdate(id, updatedItem, this.list);
     return updatedItem;
   }
+
+  truncate() {
+    this.list = [];
+  }
 }
 
 module.exports = DBController;

@@ -32,7 +32,8 @@ class UserController {
     try {
       const { id } = req.params;
       const result = await this.service.findUser({ id, isDeleted: false });
-      return res.json(result);
+      // TODO add check of empty array
+      return res.json(result[0] || {});
     } catch (e) {
       next(e);
     }

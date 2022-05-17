@@ -42,7 +42,11 @@ class DbService {
     list: T[]
   ) {
     return new Promise((resolve) => {
-      resolve(list.map((item) => (item.id === id ? updatedItem : item)));
+      resolve(
+        list.map((item) =>
+          item.id === id ? { ...item, ...updatedItem } : item
+        )
+      );
     });
   }
 }

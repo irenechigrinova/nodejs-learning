@@ -43,17 +43,25 @@ describe('Routes', () => {
   test('responds to POST /users/', async () => {
     const res = await request(app)
       .post('/users/')
-      .send({ login: 'test', password: '123', age: 25 });
+      .send({ login: 'test', password: '123aaa', age: 25 });
     expect(res.statusCode).toBe(200);
     expect(res.body.id).toBeTruthy();
     expect(res.body.login).toEqual('test');
+  });
+
+  test('respond to POST /users/ should fail', async () => {
+    const res = await request(app)
+      .post('/users/')
+      .send({ login: 't', password: '123', age: 0 });
+    expect(res.statusCode).toBe(400);
+    expect(res.body.details.length).toBe(3);
   });
 
   test('responds to PUT /users/', async () => {
     const user = await dbInstance.create({ login: 'test', isDeleted: false });
     const res = await request(app)
       .put('/users/')
-      .send({ id: user.id, login: 'test2', isDeleted: false });
+      .send({ id: user.id, login: 'test2' });
     expect(res.statusCode).toBe(200);
     expect(res.body.id).toBeTruthy();
     expect(res.body.login).toEqual('test2');
@@ -68,6 +76,6 @@ describe('Routes', () => {
     expect(res.statusCode).toBe(200);
 
     const getRes = await request(app).get(`/users/${user.id}`);
-    expect(getRes.body.login).not.toBeTruthy();
+    expect(getRes.body).not.toBeTruthy();
   });
 });

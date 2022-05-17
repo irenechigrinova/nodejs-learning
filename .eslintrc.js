@@ -31,6 +31,7 @@ module.exports = {
     'consistent-return': 'off',
     'import/no-import-module-exports': 'off',
     'import/extensions': 'off',
+    'newline-per-chained-call': 'off',
     '@typescript-eslint/no-unused-vars': [
       'warn',
       {

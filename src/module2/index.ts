@@ -5,7 +5,7 @@ const cors = require('cors');
 const router = require('./router/index');
 const DB = require('./controllers/db-controller');
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.MODULE_2_PORT || 8000;
 
 const app = express();
 app.disable('x-powered-by');

@@ -14,18 +14,18 @@ module.exports = (db: IDataBase<TUser>) => {
 
   appRouter.get('/users/', userController.getUsers);
   appRouter.get('/users/autoSuggestions/', userController.getAutoSuggestUsers);
-  appRouter.get('/users/:id', userController.getUserById);
+  appRouter.get('/users/:userId', userController.getUserById);
   appRouter.post(
     '/users/',
     validation(userPostSchema),
     userController.createUser
   );
   appRouter.put(
-    '/users/',
+    '/users/:userId',
     validation(userPutSchema),
     userController.updateUser
   );
-  appRouter.delete('/users/:id', userController.softDeleteUser);
+  appRouter.delete('/users/:userId', userController.softDeleteUser);
 
   return appRouter;
 };

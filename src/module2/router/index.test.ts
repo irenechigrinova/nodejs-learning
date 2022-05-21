@@ -2,7 +2,7 @@ import request from 'supertest';
 import express from 'express';
 
 const routerTest = require('./index');
-const DB = require('../controllers/db-controller');
+const DB = require('../repository/repository');
 
 const dbInstance = new DB();
 const router = routerTest(dbInstance);
@@ -33,11 +33,16 @@ describe('Routes', () => {
     expect(res.body.length).toBe(2);
   });
 
-  test('responds to GET /users/:id', async () => {
+  test('responds to GET /users/:userId', async () => {
     const user = await dbInstance.create({ login: 'test', isDeleted: false });
     const res = await request(app).get(`/users/${user.id}`);
     expect(res.statusCode).toBe(200);
     expect(res.body.id).toEqual(user.id);
+  });
+
+  test('responds to GET /users/:userId with 404', async () => {
+    const res = await request(app).get('/users/1');
+    expect(res.statusCode).toBe(404);
   });
 
   test('responds to POST /users/', async () => {
@@ -54,13 +59,15 @@ describe('Routes', () => {
       .post('/users/')
       .send({ login: 't', password: '123', age: 0 });
     expect(res.statusCode).toBe(400);
-    expect(res.body.details.length).toBe(3);
+    expect(res.body.details.login).toBeTruthy();
+    expect(res.body.details.age).toBeTruthy();
+    expect(res.body.details.password).toBeTruthy();
   });
 
-  test('responds to PUT /users/', async () => {
+  test('responds to PUT /users/:userId', async () => {
     const user = await dbInstance.create({ login: 'test', isDeleted: false });
     const res = await request(app)
-      .put('/users/')
+      .put(`/users/${user.id}`)
       .send({ id: user.id, login: 'test2' });
     expect(res.statusCode).toBe(200);
     expect(res.body.id).toBeTruthy();
@@ -70,12 +77,24 @@ describe('Routes', () => {
     expect(getRes.body.login).toEqual('test2');
   });
 
-  test('responds to DELETE /users/:id', async () => {
+  test('responds to PUT /users/:userId with 404', async () => {
+    const res = await request(app)
+      .put('/users/1')
+      .send({ id: '1', login: 'test2' });
+    expect(res.statusCode).toBe(404);
+  });
+
+  test('responds to DELETE /users/:userId', async () => {
     const user = await dbInstance.create({ login: 'test', isDeleted: false });
     const res = await request(app).delete(`/users/${user.id}`);
     expect(res.statusCode).toBe(200);
 
     const getRes = await request(app).get(`/users/${user.id}`);
-    expect(getRes.body).not.toBeTruthy();
+    expect(getRes.statusCode).toBe(404);
+  });
+
+  test('responds to DELETE /users/:userId with 404', async () => {
+    const res = await request(app).delete('/users/1');
+    expect(res.statusCode).toBe(404);
   });
 });

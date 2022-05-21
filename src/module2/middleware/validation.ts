@@ -11,7 +11,10 @@ module.exports =
     if (error?.isJoi) {
       res.status(400).json({
         error: 'Validation failed',
-        details: error.details.map(({ message }) => message),
+        details: error.details.reduce(
+          (result, { message, path }) => ({ ...result, [path[0]]: message }),
+          {}
+        ),
       });
     } else {
       next();

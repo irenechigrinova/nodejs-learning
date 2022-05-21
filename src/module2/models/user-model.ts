@@ -7,8 +7,9 @@ export type TUser = {
 };
 
 export type TUserService = {
-  findUser: (params: Partial<TUser>) => Promise<TUser[]>;
-  createUser: (user: TUser) => Promise<TUser>;
-  updateUser: (user: TUser) => Promise<TUser>;
-  softDeleteUser: (id: string) => Promise<string>;
+  findUsers: (params: Partial<TUser>) => Promise<TUser[]>;
+  findUserById: (id: string) => Promise<TUser | undefined>;
+  createUser: (user: Partial<TUser>) => Promise<TUser>;
+  updateUser: (id: string, user: Partial<TUser>) => Promise<TUser | undefined>;
+  softDeleteUser: (id: string) => Promise<boolean>;
 };

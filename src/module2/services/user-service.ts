@@ -7,26 +7,32 @@ class UserService {
   constructor(db: IDataBase<TUser>) {
     this.db = db;
 
-    this.findUser = this.findUser.bind(this);
+    this.findUserById = this.findUserById.bind(this);
+    this.findUsers = this.findUsers.bind(this);
     this.createUser = this.createUser.bind(this);
     this.updateUser = this.updateUser.bind(this);
     this.softDeleteUser = this.softDeleteUser.bind(this);
   }
 
-  findUser(params: Record<keyof TUser, any>) {
+  async findUserById(id: string): Promise<TUser | undefined> {
+    const list: TUser[] = await this.db.find({ id, isDeleted: false });
+    return list[0];
+  }
+
+  async findUsers(params: Partial<TUser>): Promise<TUser[]> {
     return this.db.find(params);
   }
 
-  createUser(user: TUser) {
+  createUser(user: Partial<TUser>): Promise<TUser> {
     return this.db.create(user);
   }
 
-  updateUser(user: TUser) {
-    return this.db.findByIdAndUpdate(user.id, user);
+  updateUser(id: string, fields: Partial<TUser>): Promise<TUser | undefined> {
+    return this.db.findByIdAndUpdate(id, fields, 'isDeleted');
   }
 
-  softDeleteUser(id: string) {
-    return this.db.findByIdAndDelete(id);
+  softDeleteUser(id: string): Promise<boolean> {
+    return this.db.findByIdAndDelete(id, 'isDeleted');
   }
 }
 

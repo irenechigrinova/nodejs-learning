@@ -1,5 +1,5 @@
-import { IDataBase } from '../models/db-model';
-import { TUser } from '../models/user-model';
+import { IDataBase } from '../types/db.types';
+import { TUser } from '../types/user.types';
 
 class UserService {
   private db: IDataBase<TUser>;

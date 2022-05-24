@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { IDataBase } from '../models/db-model';
-import { TUser, TUserService } from '../models/user-model';
+import { IDataBase } from '../types/db.types';
+import { TUser, TUserService } from '../types/user.types';
 
 const UserService = require('../services/user-service');
 

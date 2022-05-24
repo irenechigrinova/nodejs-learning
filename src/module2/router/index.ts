@@ -1,5 +1,5 @@
-import { IDataBase } from '../models/db-model';
-import { TUser } from '../models/user-model';
+import { IDataBase } from '../types/db.types';
+import { TUser } from '../types/user.types';
 
 const { Router } = require('express');
 const UserController = require('../controllers/user-controller');

@@ -2,9 +2,10 @@ import request from 'supertest';
 import express from 'express';
 
 const routerTest = require('./index');
-const DB = require('../repository/repository');
+const TestDB = require('../repository/user-repository');
+const TestModel = require('../models/user-model');
 
-const dbInstance = new DB();
+const dbInstance = new TestDB(new TestModel());
 const router = routerTest(dbInstance);
 
 const app = express();

@@ -1,6 +1,7 @@
-const Repo = require('./repository');
+const Repo = require('./user-repository');
+const Model = require('../models/user-model');
 
-const repoInstance = new Repo();
+const repoInstance = new Repo(new Model());
 
 describe('Repository test', () => {
   beforeEach(async () => {

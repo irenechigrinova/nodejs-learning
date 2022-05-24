@@ -19,18 +19,46 @@ describe('Routes', () => {
   test('responds to GET /users/', async () => {
     const res = await request(app).get('/users/');
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual([]);
+    expect(res.body.users).toEqual([]);
+    expect(res.body.pagination.limit).toEqual(10);
+    expect(res.body.pagination.offset).toEqual(0);
+    expect(res.body.pagination.total).toEqual(0);
   });
 
-  test('responds to GET /users/autoSuggestions?login=test&limit=2', async () => {
+  test('responds to GET /users?login=test&limit=2', async () => {
     await dbInstance.create({ login: 'test', isDeleted: false });
     await dbInstance.create({ login: 'test2', isDeleted: false });
     await dbInstance.create({ login: 'test3', isDeleted: false });
-    const res = await request(app).get(
-      '/users/autoSuggestions?login=test&limit=2'
-    );
+    const res = await request(app).get('/users?login=test&limit=2');
     expect(res.statusCode).toBe(200);
-    expect(res.body.length).toBe(2);
+    expect(res.body.users.length).toBe(2);
+    expect(res.body.pagination.limit).toEqual(2);
+    expect(res.body.pagination.offset).toEqual(0);
+    expect(res.body.pagination.total).toEqual(3);
+  });
+
+  test('responds to GET /users?login=test&limit=1 with limit', async () => {
+    await dbInstance.create({ login: 'test', isDeleted: false });
+    await dbInstance.create({ login: 'test2', isDeleted: false });
+    await dbInstance.create({ login: 'test3', isDeleted: false });
+    const res = await request(app).get('/users?login=test&limit=1');
+    expect(res.statusCode).toBe(200);
+    expect(res.body.users.length).toBe(1);
+    expect(res.body.pagination.limit).toEqual(1);
+    expect(res.body.pagination.offset).toEqual(0);
+    expect(res.body.pagination.total).toEqual(3);
+  });
+
+  test('responds to GET /users?login=test&limit=2&offset=1 with offset', async () => {
+    await dbInstance.create({ login: 'test', isDeleted: false });
+    await dbInstance.create({ login: 'test2', isDeleted: false });
+    await dbInstance.create({ login: 'test3', isDeleted: false });
+    const res = await request(app).get('/users?login=test&limit=2&offset=1');
+    expect(res.statusCode).toBe(200);
+    expect(res.body.users.length).toBe(2);
+    expect(res.body.pagination.limit).toEqual(2);
+    expect(res.body.pagination.offset).toEqual(1);
+    expect(res.body.pagination.total).toEqual(3);
   });
 
   test('responds to GET /users/:userId', async () => {
@@ -68,7 +96,7 @@ describe('Routes', () => {
     const user = await dbInstance.create({ login: 'test', isDeleted: false });
     const res = await request(app)
       .put(`/users/${user.id}`)
-      .send({ id: user.id, login: 'test2' });
+      .send({ login: 'test2' });
     expect(res.statusCode).toBe(200);
     expect(res.body.id).toBeTruthy();
     expect(res.body.login).toEqual('test2');
@@ -78,9 +106,7 @@ describe('Routes', () => {
   });
 
   test('responds to PUT /users/:userId with 404', async () => {
-    const res = await request(app)
-      .put('/users/1')
-      .send({ id: '1', login: 'test2' });
+    const res = await request(app).put('/users/1').send({ login: 'test2' });
     expect(res.statusCode).toBe(404);
   });
 

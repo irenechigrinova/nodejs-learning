@@ -8,22 +8,48 @@ const UserService = require('../services/user-service');
 class UserController {
   readonly service: TUserService;
 
+  private sortUsers(
+    users: TUser[],
+    params: {
+      login: string;
+      limit: number;
+      offset: number;
+    }
+  ) {
+    const filtered = users.filter(
+      (user) => user.login.toLowerCase().indexOf(params.login) !== -1
+    );
+    return {
+      total: filtered.length,
+      result: filtered
+        .splice(params.offset, params.limit)
+        .sort((a, b) => a.login.localeCompare(b.login)),
+    };
+  }
+
   constructor(db: IDataBase<TUser>) {
     this.service = new UserService(db);
-
-    this.getUsers = this.getUsers.bind(this);
-    this.getDeletedUsers = this.getDeletedUsers.bind(this);
-    this.getUserById = this.getUserById.bind(this);
-    this.createUser = this.createUser.bind(this);
-    this.updateUser = this.updateUser.bind(this);
-    this.getAutoSuggestUsers = this.getAutoSuggestUsers.bind(this);
-    this.softDeleteUser = this.softDeleteUser.bind(this);
   }
 
   async getUsers(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await this.service.findUsers({ isDeleted: false });
-      return res.json(result);
+      const limit = req.query.limit ? +req.query.limit : 10;
+      const offset = req.query.offset ? +req.query.offset : 0;
+      const login = (req.query.login as string)?.toLowerCase() || '';
+      const allUsers = await this.service.findUsers({ isDeleted: false });
+      const { total, result } = this.sortUsers(allUsers, {
+        login,
+        limit,
+        offset,
+      });
+      return res.json({
+        users: result,
+        pagination: {
+          limit,
+          offset,
+          total,
+        },
+      });
     } catch (e) {
       next(e);
     }
@@ -88,21 +114,6 @@ class UserController {
           },
         });
       }
-    } catch (e) {
-      next(e);
-    }
-  }
-
-  async getAutoSuggestUsers(req: Request, res: Response, next: NextFunction) {
-    try {
-      const limit = req.query.limit ? +req.query.limit : 10;
-      const login = (req.query.login as string)?.toLowerCase() || '';
-      const users = await this.service.findUsers({ isDeleted: false });
-      const filtered = users
-        .splice(0, +limit)
-        .filter((user) => user.login.toLowerCase().indexOf(login) !== -1)
-        .sort((a, b) => a.login.localeCompare(b.login));
-      return res.json(filtered);
     } catch (e) {
       next(e);
     }

@@ -12,20 +12,25 @@ module.exports = (db: IDataBase<TUser>) => {
   const appRouter = new Router();
   const userController = new UserController(db);
 
-  appRouter.get('/users/', userController.getUsers);
-  appRouter.get('/users/autoSuggestions/', userController.getAutoSuggestUsers);
-  appRouter.get('/users/:userId', userController.getUserById);
+  appRouter.get('/users/', userController.getUsers.bind(userController));
+  appRouter.get(
+    '/users/:userId',
+    userController.getUserById.bind(userController)
+  );
   appRouter.post(
     '/users/',
     validation(userPostSchema),
-    userController.createUser
+    userController.createUser.bind(userController)
   );
   appRouter.put(
     '/users/:userId',
     validation(userPutSchema),
-    userController.updateUser
+    userController.updateUser.bind(userController)
   );
-  appRouter.delete('/users/:userId', userController.softDeleteUser);
+  appRouter.delete(
+    '/users/:userId',
+    userController.softDeleteUser.bind(userController)
+  );
 
   return appRouter;
 };

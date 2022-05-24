@@ -5,15 +5,14 @@ const cors = require('cors');
 const router = require('./router/index');
 const errorMiddleware = require('./middleware/error-handling');
 
-const UserDB = require('./repository/user-repository');
-const UserDBModel = require('./models/user-model');
+const userRepo = require('./helpers/user-injection.helper');
 
 const PORT = process.env.MODULE_2_PORT || 8000;
 
 const app = express();
 app.disable('x-powered-by');
 
-const userDBInstance = new UserDB(new UserDBModel());
+const userDBInstance = userRepo();
 const appRouter = router(userDBInstance);
 
 // middlewares

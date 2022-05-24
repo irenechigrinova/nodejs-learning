@@ -8,25 +8,6 @@ const UserService = require('../services/user-service');
 class UserController {
   readonly service: TUserService;
 
-  private sortUsers(
-    users: TUser[],
-    params: {
-      login: string;
-      limit: number;
-      offset: number;
-    }
-  ) {
-    const filtered = users.filter(
-      (user) => user.login.toLowerCase().indexOf(params.login) !== -1
-    );
-    return {
-      total: filtered.length,
-      result: filtered
-        .splice(params.offset, params.limit)
-        .sort((a, b) => a.login.localeCompare(b.login)),
-    };
-  }
-
   constructor(db: IDataBase<TUser>) {
     this.service = new UserService(db);
   }
@@ -37,7 +18,7 @@ class UserController {
       const offset = req.query.offset ? +req.query.offset : 0;
       const login = (req.query.login as string)?.toLowerCase() || '';
       const allUsers = await this.service.findUsers({ isDeleted: false });
-      const { total, result } = this.sortUsers(allUsers, {
+      const { total, result } = this.service.sortUsers(allUsers, {
         login,
         limit,
         offset,

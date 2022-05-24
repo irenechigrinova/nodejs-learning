@@ -69,4 +69,21 @@ describe('User Service test', () => {
 
     expect(deleted).toBe(false);
   });
+
+  it('should sort users', async () => {
+    const users = [
+      { login: 'def', id: '1' },
+      { login: 'abc', id: '2' },
+      { login: 'ghi', id: '3' },
+    ];
+    const { result, total } = service.sortUsers(users, {
+      limit: 10,
+      offset: 0,
+      login: '',
+    });
+
+    expect(result.length).toBe(3);
+    expect(result[0].login).toBe('abc');
+    expect(total).toBe(3);
+  });
 });

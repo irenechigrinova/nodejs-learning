@@ -34,6 +34,25 @@ class UserService {
   softDeleteUser(id: string): Promise<boolean> {
     return this.db.findByIdAndDelete(id, 'isDeleted');
   }
+
+  sortUsers(
+    users: TUser[],
+    params: {
+      login: string;
+      limit: number;
+      offset: number;
+    }
+  ): { result: TUser[]; total: number } {
+    const filtered = users.filter(
+      (user) => user.login.toLowerCase().indexOf(params.login) !== -1
+    );
+    return {
+      total: filtered.length,
+      result: filtered
+        .splice(params.offset, params.limit)
+        .sort((a, b) => a.login.localeCompare(b.login)),
+    };
+  }
 }
 
 module.exports = UserService;

@@ -12,4 +12,8 @@ export type TUserService = {
   createUser: (user: Partial<TUser>) => Promise<TUser>;
   updateUser: (id: string, user: Partial<TUser>) => Promise<TUser | undefined>;
   softDeleteUser: (id: string) => Promise<boolean>;
+  sortUsers: (
+    users: TUser[],
+    params: { login: string; limit: number; offset: number }
+  ) => { result: TUser[]; total: number };
 };

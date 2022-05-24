@@ -1,12 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 
 import { IDataBase } from '../types/db.types';
-import { TUser, TUserService } from '../types/user.types';
+import { TUser } from '../types/user.types';
+import { IUserService } from '../types/user-service.types';
 
 const UserService = require('../services/user-service');
 
 class UserController {
-  readonly service: TUserService;
+  readonly service: IUserService;
 
   constructor(db: IDataBase<TUser>) {
     this.service = new UserService(db);

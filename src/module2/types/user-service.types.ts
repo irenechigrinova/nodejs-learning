@@ -1,6 +1,6 @@
 import { TUser } from './user.types';
 
-export interface TUserService {
+export interface IUserService {
   findUsers: (params: Partial<TUser>) => Promise<TUser[]>;
   findUserById: (id: string) => Promise<TUser | undefined>;
   createUser: (user: Partial<TUser>) => Promise<TUser>;

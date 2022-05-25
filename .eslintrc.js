@@ -2,6 +2,7 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
+    jest: true,
   },
   extends: ['airbnb-base'],
   parser: '@typescript-eslint/parser',
@@ -30,8 +31,8 @@ module.exports = {
     'consistent-return': 'off',
     'import/no-import-module-exports': 'off',
     'import/extensions': 'off',
+    'newline-per-chained-call': 'off',
     'class-methods-use-this': 'off',
-    'no-underscore-dangle': 'off',
     '@typescript-eslint/no-unused-vars': [
       'warn',
       {

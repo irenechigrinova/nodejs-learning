@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "test": "jest",
-    "lint": "eslint --fix",
+    "eslint": "eslint .",
     "m1-task1-1": "nodemon src/module1/task1-1.ts",
     "m1-task1-2": "nodemon src/module1/task1-2.ts",
     "m1-task2": "nodemon src/module1/task2.ts",

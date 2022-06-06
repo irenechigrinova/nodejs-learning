@@ -10,7 +10,7 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint', 'prettier'],
+  plugins: ['@typescript-eslint', 'prettier', 'sql'],
   settings: {
     'import/resolver': {
       node: {
@@ -33,6 +33,7 @@ module.exports = {
     'import/extensions': 'off',
     'newline-per-chained-call': 'off',
     'class-methods-use-this': 'off',
+    'linebreak-style': 'off',
     '@typescript-eslint/no-unused-vars': [
       'warn',
       {
@@ -41,5 +42,7 @@ module.exports = {
         varsIgnorePattern: '^_',
       },
     ],
+    'sql/format': 'off',
+    'sql/no-unsafe-query': 'off',
   },
 };

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
-module.exports = (
+const errorHandling = (
   err: Error,
   req: Request,
   res: Response,
@@ -9,3 +9,5 @@ module.exports = (
   res.status
     ? res.status(500).json({ error: 'Server error', details: err })
     : next();
+
+export default errorHandling;

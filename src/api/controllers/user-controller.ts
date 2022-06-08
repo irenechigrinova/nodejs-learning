@@ -1,27 +1,26 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { IDataBase } from '../types/db.types';
-import { TUser } from '../types/user.types';
-import { IUserService } from '../types/user-service.types';
+import UserRepository from '../repository/user-repository';
 
-const UserService = require('../services/user-service');
+import { TUser } from '../types/user.types';
 
 class UserController {
-  readonly service: IUserService;
+  readonly repository: UserRepository;
 
-  constructor(db: IDataBase<TUser>) {
-    this.service = new UserService(db);
+  constructor(userRepository: UserRepository) {
+    this.repository = userRepository;
   }
 
   async createUser(req: Request, res: Response, next: NextFunction) {
     try {
       const { login, password, age } = req.body;
-      const newUser: TUser[] = await this.service.createUser({
+      const newUser: TUser = await this.repository.create({
         login,
         password,
         age,
       });
-      return res.json(newUser[0]);
+      delete newUser.isDeleted;
+      return res.json(newUser);
     } catch (e) {
       next(e);
     }
@@ -31,9 +30,13 @@ class UserController {
     try {
       const { ...rest } = req.body;
       const { userId } = req.params;
-      const updatedUser = await this.service.updateUser(+userId, rest);
-      if (updatedUser.length) {
-        res.json(updatedUser[0]);
+      const updatedUser = await this.repository.findByIdAndUpdate(
+        +userId,
+        rest
+      );
+      if (updatedUser) {
+        delete updatedUser.isDeleted;
+        res.json(updatedUser);
       } else {
         res.status(404).json({
           error: 'No entity found',
@@ -50,7 +53,7 @@ class UserController {
   async softDeleteUser(req: Request, res: Response, next: NextFunction) {
     try {
       const { userId } = req.params;
-      const result = await this.service.softDeleteUser(+userId);
+      const result = await this.repository.findByIdAndDelete(+userId);
       if (result) {
         res.json({ success: true });
       } else {
@@ -69,9 +72,9 @@ class UserController {
   async getUserById(req: Request, res: Response, next: NextFunction) {
     try {
       const { userId } = req.params;
-      const result = await this.service.findUserById(+userId);
-      if (result.length) {
-        res.json(result[0]);
+      const result = await this.repository.findById(+userId);
+      if (result) {
+        res.json(result);
       } else {
         res.status(404).json({
           error: 'No entity found',
@@ -90,7 +93,7 @@ class UserController {
       const limit = req.query.limit ? +req.query.limit : 10;
       const offset = req.query.offset ? +req.query.offset : 0;
       const login = (req.query.login as string)?.toLowerCase() || '';
-      const { data, total } = await this.service.findUsers(
+      const { data, total } = await this.repository.findByParams(
         login,
         limit,
         offset
@@ -109,4 +112,4 @@ class UserController {
   }
 }
 
-module.exports = UserController;
+export default UserController;

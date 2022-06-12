@@ -1,7 +1,9 @@
 import 'dotenv/config';
 import 'reflect-metadata';
+import 'express-async-errors';
 import express from 'express';
 import cors from 'cors';
+
 import router from './router/index';
 import errorMiddleware from './middleware/error-handling';
 import AppDataSource from './data-source';

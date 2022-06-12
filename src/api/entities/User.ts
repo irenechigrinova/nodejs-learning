@@ -1,24 +1,25 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn
+} from 'typeorm';
 
 @Entity()
 class User {
   @PrimaryGeneratedColumn()
-  id: number;
+    id: number;
 
   @Column({
     length: 30,
-    unique: true,
   })
-  login: string;
+    login: string;
 
   @Column()
-  password: string;
+    password: string;
 
   @Column()
-  age: number;
+    age: number;
 
-  @Column()
-  isDeleted: boolean;
+  @DeleteDateColumn({ select: false })
+    deletedAt?: Date | null;
 }
 
 export default User;

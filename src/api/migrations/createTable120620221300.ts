@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 import User from '../entities/User';
 
-class CreateTable implements MigrationInterface {
+class CreateTable120620221300 implements MigrationInterface {
   private table = new Table({
     name: 'user',
     columns: [
@@ -52,4 +52,6 @@ class CreateTable implements MigrationInterface {
   }
 }
 
-export default CreateTable;
+export default CreateTable120620221300;
+// npm run typeorm migration:generate -d <path/to/datasource> path/to/migrations/<migration-name>
+// https://github.com/typeorm/typeorm/issues/8860

@@ -1,4 +1,4 @@
-import { Like, Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 import User from '../entities/User';
 
@@ -7,19 +7,26 @@ import { TUser } from '../types/user.types';
 class UserRepository {
   private repository: Repository<User>;
 
+  private uniqueLoginHash = 'not_deleted';
+
   constructor(repository: Repository<User>) {
     this.repository = repository;
   }
 
-  async create(item: Partial<TUser>): Promise<TUser> {
-    const { login, password, age } = item;
+  async create(item: Partial<TUser>): Promise<TUser | undefined> {
     const user = new User();
-    user.login = login as string;
-    user.password = password as string;
-    user.age = age as number;
-    user.isDeleted = false;
-    await this.repository.save(user);
-    return user;
+    const newUser: TUser = {
+      ...user,
+      ...item,
+    };
+    const userExists = await this.repository.findOneBy({ login: item.login });
+    if (userExists) {
+      return undefined;
+    }
+
+    await this.repository.save(newUser as User);
+    delete newUser.deletedAt;
+    return newUser;
   }
 
   async findByIdAndUpdate(
@@ -28,24 +35,29 @@ class UserRepository {
   ): Promise<TUser | undefined> {
     const userToUpdate: TUser | null = await this.repository.findOneBy({
       id,
-      isDeleted: false,
     });
+    const keys = Object.keys(updatedItem) as Array<keyof typeof updatedItem>;
     if (userToUpdate) {
-      (Object.keys(updatedItem) as Array<keyof typeof updatedItem>).forEach(
-        (key) => {
-          // @ts-ignore
-          userToUpdate[key] = updatedItem[key];
-        }
-      );
-      await this.repository.save(userToUpdate);
+      keys.forEach((key) => {
+        // @ts-ignore
+        userToUpdate[key] = updatedItem[key];
+      });
+      await this.repository.save(userToUpdate as User);
+      delete userToUpdate.deletedAt;
       return userToUpdate;
     }
     return undefined;
   }
 
   async findByIdAndDelete(id: number): Promise<boolean> {
-    const updatedUser = await this.findByIdAndUpdate(id, { isDeleted: true });
-    return !!updatedUser;
+    const userToDelete: TUser | null = await this.repository.findOneBy({
+      id,
+    });
+    if (userToDelete) {
+      await this.repository.softDelete(id);
+      return true;
+    }
+    return false;
   }
 
   async findByParams(
@@ -60,11 +72,11 @@ class UserRepository {
       skip: offset,
       take: limit,
       where: {
-        login: Like(`%${loginSubstr}%`),
+        login: ILike(`${loginSubstr}%`),
       },
     });
     return {
-      data: users.map(({ isDeleted, ...rest }) => rest),
+      data: users,
       total,
     };
   }
@@ -72,7 +84,6 @@ class UserRepository {
   async findById(id: number): Promise<TUser | null> {
     return this.repository.findOneBy({
       id,
-      isDeleted: false,
     });
   }
 }

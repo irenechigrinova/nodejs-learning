@@ -3,5 +3,5 @@ export type TUser = {
   login: string;
   password: string;
   age: number;
-  isDeleted?: boolean;
+  deletedAt?: Date | null;
 };

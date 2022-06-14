@@ -1,7 +1,7 @@
 export type TUser = {
-  id: string;
+  id: number;
   login: string;
   password: string;
   age: number;
-  isDeleted: boolean;
+  deletedAt?: Date | null;
 };

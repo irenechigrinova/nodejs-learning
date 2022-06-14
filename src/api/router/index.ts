@@ -1,16 +1,17 @@
-import { IDataBase } from '../types/db.types';
-import { TUser } from '../types/user.types';
+import { Router } from 'express';
 
-const { Router } = require('express');
-const UserController = require('../controllers/user-controller');
+import UserController from '../controllers/user-controller';
+import UserRepository from '../repository/user-repository';
 
-const validation = require('../middleware/validation');
-const userPostSchema = require('../schemes/users.post.schema');
-const userPutSchema = require('../schemes/users.put.schema');
+import validation from '../middleware/validation';
 
-module.exports = (db: IDataBase<TUser>) => {
+import userPostSchema from '../schemes/users.post.schema';
+import userPutSchema from '../schemes/users.put.schema';
+
+const router = (userRepository: UserRepository) => {
+  // @ts-ignore
   const appRouter = new Router();
-  const userController = new UserController(db);
+  const userController = new UserController(userRepository);
 
   appRouter.get('/users/', userController.getUsers.bind(userController));
   appRouter.get(
@@ -34,3 +35,5 @@ module.exports = (db: IDataBase<TUser>) => {
 
   return appRouter;
 };
+
+export default router;

@@ -1,6 +1,8 @@
 import {
-  Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn
+  Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn, ManyToMany, JoinTable,
 } from 'typeorm';
+
+import Group from './Group';
 
 @Entity()
 class User {
@@ -20,6 +22,10 @@ class User {
 
   @DeleteDateColumn({ select: false })
     deletedAt?: Date | null;
+
+  @ManyToMany(() => Group)
+  @JoinTable()
+    groups: Group[];
 }
 
 export default User;

@@ -6,6 +6,7 @@ const userPostSchema = Joi.object({
     .pattern(/^.*(?=.{4,10})(?=.*\d)(?=.*[a-zA-Z]).*$/)
     .required(),
   age: Joi.number().integer().min(4).max(130).required(),
+  groupsIds: Joi.array()?.required(),
 });
 
 export default userPostSchema;

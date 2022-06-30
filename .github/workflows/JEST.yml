@@ -1,11 +1,14 @@
-name: ESLINT
+name: JEST
 on: push
 jobs:
   build:
+    defaults:
+      run:
+        working-directory: server
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Install modules
         run: npm ci
-      - name: Run ESLint
-        run: npm run eslint
+      - name: Run tests
+        run: npm run test

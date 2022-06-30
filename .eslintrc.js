@@ -34,6 +34,8 @@ module.exports = {
     'newline-per-chained-call': 'off',
     'class-methods-use-this': 'off',
     'linebreak-style': 'off',
+    'no-param-reassign': 'off',
+    'object-curly-newline': 'off',
     '@typescript-eslint/no-unused-vars': [
       'warn',
       {

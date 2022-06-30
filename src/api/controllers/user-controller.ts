@@ -1,22 +1,22 @@
 import { Request, Response } from 'express';
 
-import UserRepository from '../repository/user-repository';
-
-import { TUser } from '../types/user.types';
+import { IUserService } from '../types/user.types';
 
 class UserController {
-  readonly repository: UserRepository;
+  private service: IUserService;
 
-  constructor(userRepository: UserRepository) {
-    this.repository = userRepository;
+  constructor(service: IUserService) {
+    this.service = service;
   }
 
   async createUser(req: Request, res: Response) {
-    const { login, password, age } = req.body;
-    const newUser: TUser | undefined = await this.repository.create({
+    const { login, password, age, groupsIds } = req.body;
+
+    const newUser = await this.service.createUser({
       login,
       password,
       age,
+      groupsIds,
     });
     if (newUser) {
       res.json(newUser);
@@ -31,9 +31,9 @@ class UserController {
   }
 
   async updateUser(req: Request, res: Response) {
-    const { ...rest } = req.body;
+    const { ...params } = req.body;
     const { userId } = req.params;
-    const updatedUser = await this.repository.findByIdAndUpdate(+userId, rest);
+    const updatedUser = await this.service.updateUser(+userId, params);
     if (updatedUser) {
       res.json(updatedUser);
     } else {
@@ -48,7 +48,7 @@ class UserController {
 
   async softDeleteUser(req: Request, res: Response) {
     const { userId } = req.params;
-    const result = await this.repository.findByIdAndDelete(+userId);
+    const result = await this.service.softDeleteUser(+userId);
     if (result) {
       res.json({ success: true });
     } else {
@@ -63,7 +63,7 @@ class UserController {
 
   async getUserById(req: Request, res: Response) {
     const { userId } = req.params;
-    const result = await this.repository.findById(+userId);
+    const result = await this.service.getUserById(+userId);
     if (result) {
       res.json(result);
     } else {
@@ -80,19 +80,34 @@ class UserController {
     const limit = req.query.limit ? +req.query.limit : 10;
     const offset = req.query.offset ? +req.query.offset : 0;
     const login = (req.query.login as string)?.toLowerCase() || '';
-    const { data, total } = await this.repository.findByParams(
+    const { data, meta, total } = await this.service.getUsers(
       login,
       limit,
       offset
     );
     return res.json({
       users: data,
+      meta,
       pagination: {
         limit,
         offset,
         total,
       },
     });
+  }
+
+  async addUsersToGroup(req: Request, res: Response) {
+    const { usersIds, groupId } = req.body;
+
+    const result = await this.service.addUsersToGroup(usersIds, +groupId);
+    res.status(Array.isArray(result) ? 200 : 400).json(result);
+  }
+
+  async removeUsersFromGroup(req: Request, res: Response) {
+    const { usersIds, groupId } = req.body;
+
+    const result = await this.service.removeUsersFromGroup(usersIds, +groupId);
+    res.status(Array.isArray(result) ? 200 : 400).json(result);
   }
 }
 

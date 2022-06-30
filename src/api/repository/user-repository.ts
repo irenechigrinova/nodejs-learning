@@ -1,13 +1,12 @@
-import { ILike, Repository } from 'typeorm';
+import { ILike, In, Repository } from 'typeorm';
 
 import User from '../entities/User';
 
 import { TUser } from '../types/user.types';
+import { TGroup } from '../types/group.types';
 
 class UserRepository {
   private repository: Repository<User>;
-
-  private uniqueLoginHash = 'not_deleted';
 
   constructor(repository: Repository<User>) {
     this.repository = repository;
@@ -33,18 +32,20 @@ class UserRepository {
     id: number,
     updatedItem: Partial<TUser>
   ): Promise<TUser | undefined> {
-    const userToUpdate: TUser | null = await this.repository.findOneBy({
-      id,
+    const userToUpdate: TUser | null = await this.repository.findOne({
+      where: {
+        id,
+      },
+      relations: ['groups'],
     });
-    const keys = Object.keys(updatedItem) as Array<keyof typeof updatedItem>;
     if (userToUpdate) {
-      keys.forEach((key) => {
-        // @ts-ignore
-        userToUpdate[key] = updatedItem[key];
-      });
-      await this.repository.save(userToUpdate as User);
-      delete userToUpdate.deletedAt;
-      return userToUpdate;
+      const newUser = {
+        ...userToUpdate,
+        ...updatedItem,
+      };
+      await this.repository.save(newUser as User);
+      delete newUser.deletedAt;
+      return newUser;
     }
     return undefined;
   }
@@ -74,6 +75,7 @@ class UserRepository {
       where: {
         login: ILike(`${loginSubstr}%`),
       },
+      relations: ['groups'],
     });
     return {
       data: users,
@@ -82,8 +84,20 @@ class UserRepository {
   }
 
   async findById(id: number): Promise<TUser | null> {
-    return this.repository.findOneBy({
-      id,
+    return this.repository.findOne({
+      where: {
+        id,
+      },
+      relations: ['groups'],
+    });
+  }
+
+  async findAllUsersById(ids: number[]): Promise<TUser[]> {
+    return this.repository.find({
+      where: {
+        id: In(ids),
+      },
+      relations: ['groups'],
     });
   }
 }

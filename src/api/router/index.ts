@@ -1,39 +1,50 @@
 import { Router } from 'express';
 
-import UserController from '../controllers/user-controller';
+import AppDataSource from '../data-source';
+
 import UserRepository from '../repository/user-repository';
+import GroupRepository from '../repository/group-repository';
+import PermissionRepository from '../repository/permission-repository';
 
-import validation from '../middleware/validation';
+import UserService from '../services/user-service';
+import GroupService from '../services/group-service';
 
-import userPostSchema from '../schemes/users.post.schema';
-import userPutSchema from '../schemes/users.put.schema';
+import userRouter from './user-router';
+import permissionRouter from './permission-router';
+import groupRouter from './group-router';
 
-const router = (userRepository: UserRepository) => {
-  // @ts-ignore
-  const appRouter = new Router();
-  const userController = new UserController(userRepository);
+import User from '../entities/User';
+import Group from '../entities/Group';
+import Permission from '../entities/Permission';
 
-  appRouter.get('/users/', userController.getUsers.bind(userController));
-  appRouter.get(
-    '/users/:userId',
-    userController.getUserById.bind(userController)
-  );
-  appRouter.post(
-    '/users/',
-    validation(userPostSchema),
-    userController.createUser.bind(userController)
-  );
-  appRouter.put(
-    '/users/:userId',
-    validation(userPutSchema),
-    userController.updateUser.bind(userController)
-  );
-  appRouter.delete(
-    '/users/:userId',
-    userController.softDeleteUser.bind(userController)
-  );
+import { TRepository } from '../types/common.types';
 
-  return appRouter;
-};
+const userRepository = new UserRepository(AppDataSource.getRepository(User));
+const groupRepository = new GroupRepository(AppDataSource.getRepository(Group));
+const permissionRepository = new PermissionRepository(
+  AppDataSource.getRepository(Permission)
+);
 
-export default router;
+const userService = new UserService(
+  userRepository as unknown as TRepository,
+  groupRepository as unknown as TRepository,
+  AppDataSource
+);
+const groupService = new GroupService(
+  groupRepository as unknown as TRepository,
+  permissionRepository as unknown as TRepository
+);
+
+const appUserRouter = userRouter(userService);
+const appGroupRouter = groupRouter(groupService);
+const appPermissionRouter = permissionRouter(
+  permissionRepository as unknown as TRepository
+);
+
+const rootRouter = Router();
+
+rootRouter.use('/users', appUserRouter);
+rootRouter.use('/permissions', appPermissionRouter);
+rootRouter.use('/groups', appGroupRouter);
+
+export default rootRouter;

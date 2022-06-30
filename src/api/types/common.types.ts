@@ -3,3 +3,5 @@ export type TPagination = {
   limit: number;
   total: number;
 };
+
+export type TRepository = Record<string, Function>;

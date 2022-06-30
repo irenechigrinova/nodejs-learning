@@ -1,0 +1,13 @@
+.user-groups {
+    display: flex;
+    align-items: center;
+}
+
+.user-add {
+    margin-top: 24px !important;
+    margin-right: 8px !important;
+}
+
+.user-add-group {
+    margin-left: 4px;
+}

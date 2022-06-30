@@ -2,6 +2,9 @@ name: JEST
 on: push
 jobs:
   build:
+    defaults:
+      run:
+        working-directory: server
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

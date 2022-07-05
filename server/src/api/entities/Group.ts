@@ -21,6 +21,7 @@ class Group {
       permissions: Permission[];
 
     @ManyToMany(() => User)
+    @JoinTable({ name: 'user_groups' })
       users: User[];
 }
 

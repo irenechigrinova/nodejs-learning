@@ -30,7 +30,7 @@ class GroupRepository {
       where: {
         id,
       },
-      relations: ['permissions'],
+      relations: ['permissions', 'users'],
     });
     if (groupToUpdate) {
       const newGroup = {
@@ -55,7 +55,7 @@ class GroupRepository {
   }
 
   async findAll(): Promise<TGroup[]> {
-    return this.repository.find({ relations: ['permissions'] });
+    return this.repository.find({ relations: ['permissions', 'users'] });
   }
 
   async findById(id: number): Promise<TGroup | null> {
@@ -63,7 +63,7 @@ class GroupRepository {
       where: {
         id,
       },
-      relations: ['permissions'],
+      relations: ['permissions', 'users'],
     });
   }
 

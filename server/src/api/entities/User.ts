@@ -24,7 +24,7 @@ class User {
     deletedAt?: Date | null;
 
   @ManyToMany(() => Group)
-  @JoinTable()
+  @JoinTable({ name: 'user_groups' })
     groups: Group[];
 }
 

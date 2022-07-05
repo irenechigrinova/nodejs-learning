@@ -109,18 +109,15 @@ class UserService {
     let result;
 
     try {
-      // eslint-disable-next-line no-restricted-syntax
-      for await (const user of users) {
-        const hasGroup = user.groups.find(
-          (group: TGroup) => group.id === +groupId
-        );
-        if (!hasGroup && group) {
-          user.groups = [...user.groups, group];
-        }
-        await queryRunner.manager.save(user);
-      }
+      group.users = [...group.users, ...users];
+      await queryRunner.manager.save(group);
       await queryRunner.commitTransaction();
-      result = await this.toJson(users);
+      result = await this.toJson(
+        users.map((user: TUser) => ({
+          ...user,
+          groups: [...user.groups, group],
+        }))
+      );
     } catch (err) {
       await queryRunner.rollbackTransaction();
       result = {
@@ -135,6 +132,7 @@ class UserService {
 
   async removeUsersFromGroup(usersIds: number[], groupId: number) {
     const users = await this.repository.findAllUsersById(usersIds);
+    const group = await this.groupRepository.findById(groupId);
     const queryRunner = this.appDataSource.createQueryRunner();
 
     await queryRunner.startTransaction();
@@ -142,15 +140,17 @@ class UserService {
     let result;
 
     try {
-      // eslint-disable-next-line no-restricted-syntax
-      for await (const user of users) {
-        user.groups = user.groups.filter(
-          (group: TGroup) => group.id !== +groupId
-        );
-        await queryRunner.manager.save(user);
-      }
+      group.users = group.users.filter(
+        (user: TUser) => !usersIds.includes(user.id)
+      );
+      await queryRunner.manager.save(group);
       await queryRunner.commitTransaction();
-      result = await this.toJson(users);
+      result = await this.toJson(
+        users.map((user: TUser) => ({
+          ...user,
+          groups: user.groups.filter(({ id }) => id !== groupId),
+        }))
+      );
     } catch (err) {
       await queryRunner.rollbackTransaction();
       result = {

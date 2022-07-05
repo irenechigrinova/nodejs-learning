@@ -1,7 +1,7 @@
 import request from 'supertest';
 import express from 'express';
 
-import { PermissionRepositoryStub, GroupRepositoryStub } from './stubs';
+import { PermissionRepositoryStub, GroupRepositoryStub } from '../stubs/stubs';
 
 import groupRouter from '../router/group-router';
 import GroupService from '../services/group-service';

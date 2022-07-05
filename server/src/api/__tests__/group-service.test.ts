@@ -1,4 +1,4 @@
-import { GroupRepositoryStub, PermissionRepositoryStub } from './stubs';
+import { GroupRepositoryStub, PermissionRepositoryStub } from '../stubs/stubs';
 
 import GroupService from '../services/group-service';
 

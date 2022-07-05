@@ -1,7 +1,7 @@
 import request from 'supertest';
 import express from 'express';
 
-import { PermissionRepositoryStub } from './stubs';
+import { PermissionRepositoryStub } from '../stubs/stubs';
 
 import permissionRouter from '../router/permission-router';
 import { TRepository } from '../types/common.types';

@@ -6,7 +6,7 @@ import {
   UserRepositoryStub,
   GroupRepositoryStub,
   AppDataSourceStub,
-} from './stubs';
+} from '../stubs/stubs';
 
 import userRouter from '../router/user-router';
 import UserService from '../services/user-service';

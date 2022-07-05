@@ -4,7 +4,7 @@ import {
   UserRepositoryStub,
   GroupRepositoryStub,
   AppDataSourceStub,
-} from './stubs';
+} from '../stubs/stubs';
 
 import UserService from '../services/user-service';
 
@@ -93,20 +93,5 @@ describe('User Service', () => {
     expect(users.data).toBeTruthy();
     expect(users.meta).toBeTruthy();
     expect(users.total).toBe(0);
-  });
-
-  it('should remove users from group', async () => {
-    const newUser1 = await userService.createUser(mockUser);
-    const newUser2 = await userService.createUser(mockUser);
-    const added = await userService.removeUsersFromGroup(
-      [
-        (newUser1?.data as unknown as TUser).id,
-        (newUser2?.data as unknown as TUser).id,
-      ],
-      1
-    );
-    expect(added).toBeTruthy();
-    expect((added as Record<string, any>).data).toBeTruthy();
-    expect(Array.isArray((added as Record<string, any>).data)).toBeTruthy();
   });
 });

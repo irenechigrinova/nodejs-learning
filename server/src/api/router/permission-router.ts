@@ -2,6 +2,10 @@ import { Router } from 'express';
 
 import PermissionController from '../controllers/permission-controller';
 
+import validate from '../middleware/validation';
+
+import permissionSchema from '../schemes/permission.schema';
+
 import { TRepository } from '../types/common.types';
 
 const permissionRouter = (repository: TRepository) => {
@@ -18,10 +22,12 @@ const permissionRouter = (repository: TRepository) => {
   );
   appRouter.post(
     '/',
+    validate(permissionSchema),
     permissionController.createPermission.bind(permissionController)
   );
   appRouter.put(
     '/:permissionId',
+    validate(permissionSchema),
     permissionController.updatePermission.bind(permissionController)
   );
   appRouter.delete(

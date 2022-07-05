@@ -25,8 +25,9 @@ describe('User Service', () => {
     groupsIds: [1],
   };
 
-  afterEach(() => {
+  afterEach(async () => {
     UserRepositoryStub.reset();
+    await GroupRepositoryStub.create('test', [1]);
   });
 
   it('should create user', async () => {
@@ -93,5 +94,27 @@ describe('User Service', () => {
     expect(users.data).toBeTruthy();
     expect(users.meta).toBeTruthy();
     expect(users.total).toBe(0);
+  });
+
+  it('should remove users from group', async () => {
+    const newUser1 = await userService.createUser(mockUser);
+    const removed = await userService.removeUsersFromGroup(
+      [(newUser1?.data as unknown as TUser).id],
+      1
+    );
+    expect(removed).toBeTruthy();
+    expect((removed as Record<string, any>).data).toBeTruthy();
+    expect(Array.isArray((removed as Record<string, any>).data)).toBeTruthy();
+  });
+
+  it('should add users to group', async () => {
+    const newUser1 = await userService.createUser(mockUser);
+    const added = await userService.addUsersToGroup(
+      [(newUser1?.data as unknown as TUser).id],
+      1
+    );
+    expect(added).toBeTruthy();
+    expect((added as Record<string, any>).data).toBeTruthy();
+    expect(Array.isArray((added as Record<string, any>).data)).toBeTruthy();
   });
 });

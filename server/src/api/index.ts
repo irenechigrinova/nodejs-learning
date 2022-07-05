@@ -4,6 +4,8 @@ import 'express-async-errors';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 
+import Logger from './logger';
+
 import errorMiddleware from './middleware/error-handling';
 import AppDataSource from './data-source';
 
@@ -17,6 +19,7 @@ app.disable('x-powered-by');
 // middlewares
 app.use(express.json());
 app.use(cors());
+app.use(Logger.httpLogger);
 app.use('/api/v1', rootRouter);
 app.use(errorMiddleware);
 
@@ -31,5 +34,5 @@ app.listen(PORT, () => {
     .then(() => {
       console.log(`Server started on PORT = ${PORT}`);
     })
-    .catch((error) => console.log(error));
+    .catch((error) => Logger.logger('error').error(JSON.stringify(error)));
 });

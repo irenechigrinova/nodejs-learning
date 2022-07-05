@@ -66,9 +66,7 @@ describe('Group Router', () => {
   });
 
   test('responds to PUT /groups/:groupId with 404', async () => {
-    const res = await request(app)
-      .put('/api/groups/1')
-      .send({ login: 'test2' });
+    const res = await request(app).put('/api/groups/1').send({ name: 'test2' });
     expect(res.statusCode).toBe(404);
   });
 

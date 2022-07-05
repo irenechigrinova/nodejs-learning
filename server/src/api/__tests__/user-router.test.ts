@@ -129,4 +129,60 @@ describe('User Router', () => {
     const res = await request(app).delete('/api/users/1');
     expect(res.statusCode).toBe(404);
   });
+
+  test('responds to POST /users/add-to-group', async () => {
+    await UserRepositoryStub.create({
+      login: 'test',
+      password: 'qwerty76',
+      age: 10,
+      groupsIds: [2],
+    } as any);
+    await GroupRepositoryStub.create('test', [1]);
+    const res = await request(app)
+      .post('/api/users/add-to-group')
+      .send({ usersIds: [1], groupId: 1 });
+    expect(res.statusCode).toBe(200);
+  });
+
+  test('responds to POST /users/add-to-group with 400', async () => {
+    const res = await request(app)
+      .post('/api/users/add-to-group')
+      .send({ groupId: 1 });
+    expect(res.statusCode).toBe(400);
+  });
+
+  test('responds to POST /users/add-to-group with 400', async () => {
+    const res = await request(app)
+      .post('/api/users/add-to-group')
+      .send({ usersIds: [1] });
+    expect(res.statusCode).toBe(400);
+  });
+
+  test('responds to POST /users/remove-from-group', async () => {
+    await UserRepositoryStub.create({
+      login: 'test',
+      password: 'qwerty76',
+      age: 10,
+      groupsIds: [1],
+    } as any);
+    await GroupRepositoryStub.create('test', [1]);
+    const res = await request(app)
+      .post('/api/users/remove-from-group')
+      .send({ usersIds: [1], groupId: 1 });
+    expect(res.statusCode).toBe(200);
+  });
+
+  test('responds to POST /users/remove-from-group with 400', async () => {
+    const res = await request(app)
+      .post('/api/users/remove-from-group')
+      .send({ groupId: 1 });
+    expect(res.statusCode).toBe(400);
+  });
+
+  test('responds to POST /users/remove-from-group with 400', async () => {
+    const res = await request(app)
+      .post('/api/users/remove-from-group')
+      .send({ usersIds: [1] });
+    expect(res.statusCode).toBe(400);
+  });
 });

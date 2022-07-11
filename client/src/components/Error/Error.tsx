@@ -6,14 +6,16 @@ import "./Error.css";
 
 type TError = {
   title: string;
-  text: string;
+  text: string | string[];
 };
 
 function Error(props: TError) {
   return (
     <Alert severity="error">
       <AlertTitle>{props.title}</AlertTitle>
-      {props.text}
+      {!Array.isArray(props.text)
+        ? props.text
+        : props.text.map((item) => <p>{item}</p>)}
     </Alert>
   );
 }

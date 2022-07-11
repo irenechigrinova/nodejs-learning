@@ -36,3 +36,11 @@ app.listen(PORT, () => {
     })
     .catch((error) => Logger.logger('error').error(JSON.stringify(error)));
 });
+
+process.on('unhandledRejection', (reason) => {
+  Logger.logger('error').error(JSON.stringify(reason));
+});
+
+process.on('uncaughtException', (error) => {
+  Logger.logger('error').error(JSON.stringify(error));
+});

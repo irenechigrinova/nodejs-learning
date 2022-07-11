@@ -249,7 +249,7 @@ function UserList() {
     return (
       <Error
         title={(error as any).data.error}
-        text={(error as any).data.details.message}
+        text={(error as any).data.message}
       />
     );
   }
@@ -292,7 +292,7 @@ function UserList() {
           }
           text={
             ((isDeletingError || isAddingError || isUpdatingError) as any).data
-              .details.message
+              .message
           }
         />
       )}

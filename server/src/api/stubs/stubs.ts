@@ -12,6 +12,7 @@ export const GroupRepositoryStub = {
     const groupToSave = {
       name,
       permissions: [],
+      users: [],
       id: (this.list[this.list.length - 1]?.id || 0) + 1,
     };
     this.list.push(groupToSave as TGroup);

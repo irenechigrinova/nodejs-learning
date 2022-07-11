@@ -3,11 +3,11 @@ import { Router } from 'express';
 import { IUserService } from '../types/user.types';
 import UserController from '../controllers/user-controller';
 
-import validation from '../middleware/validation';
+import validate from '../middleware/validation';
 
 import userPostSchema from '../schemes/users.post.schema';
 import userPutSchema from '../schemes/users.put.schema';
-import usersAddToGroupSchema from '../schemes/users-add-to-group.schema';
+import userGroupSchema from '../schemes/user-group.schema';
 
 const userRouter = (userService: IUserService) => {
   const appRouter = Router();
@@ -17,12 +17,12 @@ const userRouter = (userService: IUserService) => {
   appRouter.get('/:userId', userController.getUserById.bind(userController));
   appRouter.post(
     '/',
-    validation(userPostSchema),
+    validate(userPostSchema),
     userController.createUser.bind(userController)
   );
   appRouter.put(
     '/:userId',
-    validation(userPutSchema),
+    validate(userPutSchema),
     userController.updateUser.bind(userController)
   );
   appRouter.delete(
@@ -31,12 +31,12 @@ const userRouter = (userService: IUserService) => {
   );
   appRouter.post(
     '/add-to-group',
-    validation(usersAddToGroupSchema),
+    validate(userGroupSchema),
     userController.addUsersToGroup.bind(userController)
   );
   appRouter.post(
     '/remove-from-group',
-    validation(usersAddToGroupSchema),
+    validate(userGroupSchema),
     userController.removeUsersFromGroup.bind(userController)
   );
 

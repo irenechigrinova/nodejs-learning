@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Schema } from 'joi';
 
-const validation =
+const validate =
   (schema: Schema) => (req: Request, res: Response, next: NextFunction) => {
     const { error } = schema.validate(req.body, {
       abortEarly: false,
@@ -21,4 +21,4 @@ const validation =
     }
   };
 
-export default validation;
+export default validate;

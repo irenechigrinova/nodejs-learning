@@ -42,6 +42,9 @@ export interface IUserService {
   ) => Promise<TReturnData | undefined>;
   softDeleteUser: (userId: number) => Promise<boolean>;
   getUserById: (userId: number) => Promise<TReturnData | undefined>;
+  getUserByLogin: (
+    login: string
+  ) => Promise<{ login: string; password: string; id: number } | null>;
   getUsers: (
     login: string,
     limit: number,

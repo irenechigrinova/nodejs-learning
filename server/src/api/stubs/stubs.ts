@@ -1,6 +1,7 @@
 import { TGroup } from '../types/group.types';
 import { EPermission, TPermission } from '../types/permission.types';
 import { TUser } from '../types/user.types';
+import Token from '../entities/Token';
 
 export const GroupRepositoryStub = {
   list: [] as TGroup[],
@@ -210,4 +211,23 @@ const queryRunner = {
 
 export const AppDataSourceStub = {
   createQueryRunner: () => queryRunner,
+};
+
+export const TokenRepositoryStub = {
+  async save(userId: number, token: string) {
+    // eslint-disable-next-line no-promise-executor-return
+    return new Promise((resolve) => resolve(true));
+  },
+  async get(token: string) {
+    // eslint-disable-next-line no-promise-executor-return
+    return new Promise((resolve) => resolve('test'));
+  },
+  async update(token: Token) {
+    // eslint-disable-next-line no-promise-executor-return
+    return new Promise((resolve) => resolve('test'));
+  },
+  async delete(token: string) {
+    // eslint-disable-next-line no-promise-executor-return
+    return new Promise((resolve) => resolve(true));
+  },
 };

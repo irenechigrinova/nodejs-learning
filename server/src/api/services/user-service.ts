@@ -89,6 +89,11 @@ class UserService {
     return user ? this.toJson(user) : undefined;
   }
 
+  async getUserByLogin(login: string) {
+    const user = await this.repository.findByLogin(login);
+    return user || undefined;
+  }
+
   async getUsers(login: string, limit: number, offset: number) {
     const { data, total } = await this.repository.findByParams(
       login,

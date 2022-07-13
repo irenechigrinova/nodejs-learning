@@ -18,7 +18,7 @@ app.disable('x-powered-by');
 
 // middlewares
 app.use(express.json());
-app.use(cors());
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 app.use(Logger.httpLogger);
 app.use('/api/v1', rootRouter);
 app.use(errorMiddleware);

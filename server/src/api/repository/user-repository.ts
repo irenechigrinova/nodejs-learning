@@ -100,6 +100,15 @@ class UserRepository {
       relations: ['groups'],
     });
   }
+
+  async findByLogin(login: string): Promise<TUser | null> {
+    return this.repository.findOne({
+      where: {
+        login,
+      },
+      select: ['id', 'login', 'password'],
+    });
+  }
 }
 
 export default UserRepository;

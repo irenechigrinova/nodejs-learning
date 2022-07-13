@@ -5,6 +5,15 @@ export const userApi = createApi({
   reducerPath: "userApi",
   baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.REACT_APP_SERVER_HOST}`,
+    prepareHeaders: (headers, { endpoint }) => {
+      const token = localStorage.getItem("accessToken");
+
+      if (token && endpoint !== "refresh-token" && endpoint !== "login") {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
+    credentials: "include",
   }),
   tagTypes: ["Users"],
   endpoints: (builder) => ({
@@ -68,6 +77,16 @@ export const userApi = createApi({
       }),
       invalidatesTags: (result, error) => [{ type: "Users", id: "LIST" }],
     }),
+    login: builder.mutation<void, { login: string; password: string }>({
+      query(body) {
+        return {
+          url: "/users/login",
+          method: "POST",
+          body,
+        };
+      },
+      invalidatesTags: [{ type: "Users", id: "LIST" }],
+    }),
   }),
 });
 
@@ -79,4 +98,5 @@ export const {
   useUpdateUserMutation,
   useAddUsersToGroupMutation,
   useRemoveUsersFromGroupMutation,
+  useLoginMutation,
 } = userApi;

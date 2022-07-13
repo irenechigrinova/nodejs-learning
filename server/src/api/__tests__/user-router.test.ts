@@ -6,10 +6,12 @@ import {
   UserRepositoryStub,
   GroupRepositoryStub,
   AppDataSourceStub,
+  TokenRepositoryStub,
 } from '../stubs/stubs';
 
 import userRouter from '../router/user-router';
 import UserService from '../services/user-service';
+import TokenService from '../services/token-service';
 import { TRepository } from '../types/common.types';
 
 const userService = new UserService(
@@ -17,8 +19,9 @@ const userService = new UserService(
   GroupRepositoryStub as unknown as TRepository,
   AppDataSourceStub as unknown as DataSource
 );
+const tokenService = new TokenService(TokenRepositoryStub);
 
-const router = userRouter(userService);
+const router = userRouter(userService, tokenService);
 
 const app = express();
 app.use(express.json());

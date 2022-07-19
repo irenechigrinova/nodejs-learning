@@ -4,6 +4,7 @@ import User from './entities/User';
 import Group from './entities/Group';
 import Permission from './entities/Permission';
 import Token from './entities/Token';
+import UserGroup from './entities/UserGroups';
 
 const AppDataSource = new DataSource({
   type: 'postgres',
@@ -12,7 +13,7 @@ const AppDataSource = new DataSource({
   username: process.env.DB_USER || '',
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'nodejs',
-  entities: [User, Group, Permission, Token],
+  entities: [User, Group, Permission, UserGroup, Token],
   migrations: ['migrations/*.ts'],
   synchronize: true,
   logging: false,

@@ -13,7 +13,7 @@ const auth = (tokenService: ITokenService) =>
       try {
         const authHeader = req.headers.authorization;
         if (!authHeader) {
-          res.status(403).json({
+          res.status(401).json({
             error: 'Not authorized',
             details: {},
           });
@@ -21,7 +21,7 @@ const auth = (tokenService: ITokenService) =>
         }
         const accessToken = authHeader!.split(' ')[1];
         if (!accessToken) {
-          res.status(403).json({
+          res.status(401).json({
             error: 'Not authorized',
             details: {},
           });

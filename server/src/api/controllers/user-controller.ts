@@ -131,10 +131,10 @@ class UserController {
     }
     const user = await this.service.getUserByLogin(login);
     if (!user) {
-      res.status(404).json({
-        error: 'No user found',
+      res.status(400).json({
+        error: 'Fields do not match',
         details: {
-          userId: `No user with login ${login} found`,
+          userId: 'No match found for login and password',
         },
       });
     }

@@ -1,0 +1,164 @@
+:local {
+
+  .Loading {
+    height: 300px;
+  }
+
+  .ChartWrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  .ChartWrapper :global .domain {
+    visibility: hidden;
+  }
+
+  .Linear--no-legend {
+    margin-top: 24px;
+  }
+
+  .Linear--trend {
+    margin-top: 12px !important;
+  }
+
+  .Legend {
+    width: 100%;
+    height: 70px;
+  }
+
+  .YAxisLabel :global .tick {
+    position: relative;
+    z-index: 1;
+  }
+
+  .YAxisLabel :global .tick text {
+    color: $brown-dark;
+    font-family: "Museo Sans Cyrl";
+    font-size: 12px;
+    font-weight: 300;
+    transform: translate(-6px, 0px);
+  }
+
+  .RightTick {
+    transform: translate(6px, 0px) !important;
+  }
+
+  .XAxisLabel :global .tick {
+    position: relative;
+    z-index: 2;
+  }
+
+  .XAxisLabel :global .tick text {
+    color: $brown-dark;
+    font-family: "Museo Sans Cyrl";
+    font-size: 12px;
+    font-weight: 300;
+    transform: translate(0, 10px);
+  }
+
+  .XAxisLabel :global .tick:not(.tick--hidden) line {
+    stroke: #D4D4D4;
+  }
+
+  .XAxisLabel :global .tick--hidden line + text,
+  .XAxisLabel :global .tick--hidden line + text + rect + text {
+    display: none;
+  }
+
+  .XAxisLabel :global .tick--hidden line {
+    stroke: transparent;
+  }
+
+  .XAxisLabel :global .tick circle {
+    cursor: pointer;
+  }
+
+  .ChartLine {
+    transform: translate(1px, 1px);
+    transition: opacity 200ms;
+  }
+
+  .ChartLine--saturated {
+    opacity: .1;
+  }
+
+  .ChartLine--hidden {
+    visibility: hidden;
+  }
+
+  .Svg {
+    position: relative;
+  }
+
+  .RightTickLine {
+    display: block;
+  }
+
+  .RightTickLine--hidden {
+    display: none;
+  }
+
+  .TooltipCircle {
+    display: block;
+    position: relative;
+    z-index: 1;
+    pointer-events: all;
+  }
+
+  .TooltipCircle--hidden {
+    display: none;
+  }
+
+  .Rectangle {
+    position: relative;
+    z-index: 2;
+    opacity: 0;
+    fill: transparent;
+  }
+
+  .Rectangle--hovered {
+    opacity: .05;
+    fill: $gray-darker;
+  }
+
+  .LineVisible {
+    stroke: #D4D4D4 !important;
+  }
+
+  .TextVisible {
+    display: block !important;
+  }
+
+  .Event text {
+    cursor: pointer;
+  }
+
+  .AddEvent {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    bottom: 16px;
+    left: 58px;
+  }
+
+  .AddEvent__text {
+    margin-right: 8px;
+  }
+
+  .Linear--dashboard .YAxisLabel :global .tick text {
+    font-size: 10px;
+    transform: translate(-5px, 0px);
+  }
+
+  .Linear--dashboard .Legend--dashboard {
+    margin-bottom: 4px;
+  }
+
+  .RotatedLeft {
+    transform: rotate(-45deg) translate(0px, -5px) !important;
+  }
+
+  .RotatedRight {
+    transform: rotate(45deg) translate(0px, -5px) !important;
+  }
+}

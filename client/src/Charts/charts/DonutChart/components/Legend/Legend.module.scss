@@ -1,0 +1,66 @@
+:local {
+
+  .Legend {
+    width: 100%;
+    margin-right: 32px;
+  }
+
+  .Table {
+    width: 100%;
+    max-width: 660px;
+    border: 1px solid $brown-light;
+    border-spacing: 0;
+    border-collapse: separate;
+  }
+
+  .Table thead {
+    background: $brown-light;
+  }
+
+  .Table th {
+    width: 20%;
+    padding: 10px;
+    color: $brown-dark;
+    font-size: 11px;
+    line-height: 14px;
+    text-align: right;
+    vertical-align: bottom;
+  }
+
+  .Table td {
+    padding: 5px 10px;
+    color: $gray-dark;
+    font-size: 12px;
+    line-height: 14px;
+    text-align: right;
+    vertical-align: middle;
+  }
+
+  .Table th:first-child,
+  .Table td:first-child {
+    width: 35%;
+    text-align: left;
+  }
+
+  .Table tr:nth-child(2n) td {
+    background: rgba(231,223,213,.5);
+  }
+
+  .Table td:not(:last-child) {
+    border-right: 1px solid $brown-light;
+  }
+
+  .Metric {
+    display: flex;
+    align-items: center;
+  }
+
+  .Color {
+    width: 15px;
+    min-width: 15px;
+    height: 15px;
+    min-height: 15px;
+    margin-right: 10px;
+    border-radius: 100%;
+  }
+}

@@ -1,0 +1,81 @@
+:local {
+
+  .Donut {
+    display: flex;
+    margin-top: 24px;
+  }
+
+  .Donut--centered {
+    justify-content: center;
+    margin-top: 12px;
+  }
+
+  .Block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 50%;
+    min-height: 400px;
+  }
+
+  .Block--full {
+    width: 100%;
+  }
+
+  .Donut :global(.error-block) {
+    min-height: 200px;
+  }
+
+  .Block--auto {
+    min-height: auto;
+  }
+
+  .Chart {
+    width: 100%;
+    min-width: 555px;
+  }
+
+  .Arc {
+    stroke: $white;
+    cursor: pointer;
+  }
+
+  .Arc--empty {
+    cursor: default;
+  }
+
+  .Info {
+    position: absolute;
+    padding: 0 4px;
+    text-align: center;
+  }
+
+  .Text,
+  .TextValue,
+  .TextPercent {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .Text {
+    font-size: 16px;
+  }
+
+  .TextValue {
+    color: $gray-darker;
+    font-size: 24px;
+  }
+
+  .TextPercent {
+    color: $gray-lighter;
+    font-size: 22px;
+  }
+
+  .Info--small .Text,
+  .Info--small .TextValue,
+  .Info--small .TextPercent {
+    margin-bottom: 4px;
+    font-size: 14px;
+  }
+}

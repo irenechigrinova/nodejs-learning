@@ -10,13 +10,17 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (!localStorage.getItem("accessToken")) {
       navigate("login");
     } else if (location.pathname === "/") {
       navigate("users");
     }
-  }, [location, navigate]);
+  }, [location, navigate]);*/
+
+  useEffect(() => {
+    navigate("charts/linear");
+  }, []);
 
   const handleLogin = () => {
     navigate("users");
@@ -25,9 +29,9 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="login" element={<Login onLogin={handleLogin} />} />
+        {/*<Route path="login" element={<Login onLogin={handleLogin} />} />
         <Route path="users" element={<UserList />} />
-        <Route path="users/:userId" element={<User />} />
+        <Route path="users/:userId" element={<User />} />*/}
       </Routes>
     </div>
   );
